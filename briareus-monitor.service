@@ -1,0 +1,27 @@
+[Unit]
+Description=Briareus outbound resource monitor
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+LoadCredential=config:/etc/briareus-monitor/config.json
+ExecStart=/usr/bin/python3 /usr/local/lib/briareus-monitor/briareus_monitor.py --config %d/config
+StateDirectory=briareus-monitor
+StateDirectoryMode=0700
+Restart=on-failure
+RestartSec=15
+TimeoutStopSec=30
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+UMask=0077
+Nice=10
+CPUQuota=5%
+MemoryMax=96M
+
+[Install]
+WantedBy=multi-user.target
